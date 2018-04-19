@@ -7,7 +7,7 @@ Built using Oficial images:
 * [PHPMyAdmin](https://hub.docker.com/r/phpmyadmin/phpmyadmin/).
 
 ## Get repo on your server
-* Run `git clone https://gogs.earthsquad.global/abdofarag/docker-compose-wordpress.git`
+* Run `git clone https://github.com/abdo-farag/docker-compose-wordpress.git`
 * Run `cd docker-compose-wordpress`
 
 ## Environment variables
@@ -33,7 +33,7 @@ MYSQL_PASSWORD=secret
 * Run `mkdir -p /opt/logs/nginx`
 * Run `mkdir -p /opt/mysql`
 * Run `mkdir -p /opt/nginx/conf.d/`
-* Run `mkdirhttps://gogs.earthsquad.global/abdofarag/docker-compose-wordpress -p /opt/wordpress`
+* Run `mkdir -p /opt/wordpress`
 * Run `cp nginx/conf.d/* /opt/nginx/conf.d/`
 
 ## Get WordPress
