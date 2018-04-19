@@ -1,0 +1,77 @@
+version: '2'
+
+services:
+  web:
+    restart: always
+    image: nginx:latest
+    container_name: "nginx"
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file: .env
+    volumes:
+      - /opt/nginx/conf.d:/etc/nginx/conf.d:rw
+      - /opt/wordpress:/var/www/html:rw
+      - /opt/logs/nginx/:/var/log/nginx:rw
+      - /etc/letsencrypt:/etc/letsencrypt:rw
+      - /etc/letsencrypt/dhparam.pem:/etc/nginx/certs/dhparam.pem:ro
+    links:
+      - php
+  # php
+  php:  
+    build: ./php/
+    restart: always
+    container_name: "php7-fpm"
+    env_file: .env
+    expose:
+      - 9000
+    links:
+      - mysql-site1
+      - mysql-site2
+    volumes:
+      - /opt/wordpress:/var/www/html
+
+  # mysql site1
+  mysql-site1:
+    restart: always
+    image: mysql:latest
+    volumes:
+      - /opt/mysql/site1:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    container_name: "mysql-site1"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password-change-me
+      - MYSQL_DATABASE=site1
+      - MYSQL_USER=site1
+      - MYSQL_PASSWORD=password-change-me
+
+  # mysql site2
+  mysql-site2:
+    restart: always
+    image: mysql:latest
+    volumes:
+      - /opt/mysql/site2:/var/lib/mysql
+    ports:
+      - "3308:3306"
+    container_name: "mysql-site2"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password-change-me
+      - MYSQL_DATABASE=site2
+      - MYSQL_USER=site2
+      - MYSQL_PASSWORD=password-change-me
+  
+  # phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin"
+    restart: always
+    ports:
+      - "8080:80"
+    links:
+      - mysql-site1
+      - mysql-site2
+    environment:
+      PMA_HOST: mysql-site1
+      PMA_HOST: mysql-site2
+
